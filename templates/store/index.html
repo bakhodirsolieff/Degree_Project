@@ -78,12 +78,14 @@
 
         <div class="row align-items-center rows-products">
             <!-- Loop through products -->
-            <div class="col-lg-3 mb-3">
+
+            {% for p in products %}
+                <div class="col-lg-3 mb-3">
                 <div class="product_grid card b-0 rounded-3 shadow m-2 p-2">
                     <div class="card-body p-0">
                         <div class="shop_thumb position-relative">
                             <a class="card-img-top d-block overflow-hidden" href="PRODUCT_DETAIL_URL">
-                                <img class="card-img-top" style="width: 100%; height: 230px; object-fit: cover" src="{% static 'PRODUCT_IMAGE_URL' %}" alt="..." />
+                                <img class="card-img-top" style="width: 100%; height: 230px; object-fit: cover" src="{{p.image.url}}" alt="..." />
                             </a>
                             <div class="product-left-hover-overlay">
                                 <ul class="left-over-buttons">
@@ -104,10 +106,10 @@
                     <div class="card-footer b-0 p-0 pt-2 bg-white d-flex align-items-start justify-content-between">
                         <div class="text-left">
                             <div class="elso_titl">
-                                <span class="small">CATEGORY_TITLE</span>
+                                <span class="small">{{p.category.title}}</span>
                             </div>
                             <h5 class="fs-md mb-0 lh-1 mb-1">
-                                <a href="PRODUCT_PAGE_URL">PRODUCT_NAME</a>
+                                <a href="PRODUCT_PAGE_URL">{{p.name}}</a>
                             </h5>
                             <div class="star-rating align-items-center d-flex justify-content-left mb-2 p-0 mt-3">
                                 <!-- Rating Stars -->
@@ -131,8 +133,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- End of loop -->
+                </div>
+            {% endfor %}
         </div>
 
         <div class="row justify-content-center">
