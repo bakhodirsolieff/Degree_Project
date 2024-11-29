@@ -109,14 +109,14 @@
                         <div class="d-flex gap-3 mb-7">
                             <div class="">
                                 <!-- Quantity -->
-                                <select class="form-select">
+                                <select class="form-select quantity" id = "quantity", name = "quantity">
                                     {% for qty in product_stock_range %}
-                                        <option class="stock-{{qty}}" value="{{ qty }}">{{ qty }}</option>
+                                        <option class="stock-{{qty}} quantity" value="{{ qty }}">{{ qty }}</option>
                                     {% endfor %}
                                 </select>    
                             </div>
                             <div class="">
-                                <a href="/cart.html" class="btn btn-sm bg-primary text-white rounded">Add to cart <i class="fas fa-shopping-cart ms-2"></i></a>
+                                <a href="#" class="btn btn-sm bg-primary text-white rounded add_to_cart" data-id="{{product.id}}">Add to cart <i class="fas fa-shopping-cart ms-2"></i></a>
                             </div>
                             <div class="">
                                 <button class="btn btn-sm bg-primary text-white rounded" data-toggle="button"><i class="fas fa-heart mr-2"></i></button>
