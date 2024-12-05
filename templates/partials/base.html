@@ -88,12 +88,10 @@
                 </div>
             </div>
             {% for message in messages %}
-                {% if message %}
-                    <div class= "alert alert-{{message.tag}}">
+                    <div class= "alert alert-{{message.tags}}">
                         <strong>{{ message }}</strong>
                     </div>
-                {% endif %}
-            {% endfor%}
+            {% endfor %}
 
 
             {% block content %}
