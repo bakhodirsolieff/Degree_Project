@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 
 from environs import Env
+from django.contrib import messages 
 
 env = Env()
 env.read_env()
@@ -149,6 +150,10 @@ AUTH_USER_MODEL = "userauths.User"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}
 
 customColorPalette = [
     {"color": "hsl(4, 90%, 58%)", "label": "Red"},

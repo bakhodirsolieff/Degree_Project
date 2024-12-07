@@ -137,9 +137,10 @@
 
                 <div class="shadow rounded p-3 mt-3">
                     <h4 class="fw-bold">Coupons</h4>
-                    <div class="mb-3 d-flex">
-                        <input type="text" class="form-control" id="Country" value="" placeholder="Coupon Code" />
-                        <a href="/checkout.html" class="btn bg-secondary text-white"><i class="fas fa-check-circle"></i></a>
+                    <form method="POST" action="{% url 'store:coupon_apply' order.order_id %}" class="mb-3 d-flex">
+                        {% csrf_token %}
+                        <input type="text" class="form-control" id="code" name="coupon_code" value="" placeholder="Coupon Code" />
+                        <button type="submit" href="/checkout.html" class="btn bg-secondary text-white"><i class="fas fa-check-circle"></i></button>
                     </div>
                 </div>
 
