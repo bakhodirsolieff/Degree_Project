@@ -32,9 +32,8 @@ SECRET_KEY = 'django-insecure-my-i9um&^3ws8na6tplwc022hvqg!8h-h3%%cw%wa_xe=30(vp
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ 
 # Application definition
 
 INSTALLED_APPS = [
@@ -54,7 +53,7 @@ INSTALLED_APPS = [
     'blog',
     
     'anymail',
-    #'captcha',
+    'captcha',
     'django_ckeditor_5',
 ]
 
@@ -119,6 +118,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+ANYMAIL = {
+    "MAILGUN_API_KEY": os.environ.get("MAILGUN_API_KEY"),
+    "MAILGUN_SENDER_DOMAIN": os.environ.get("MAILGUN_SENDER_DOMAIN"),
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
@@ -163,6 +166,11 @@ customColorPalette = [
     {"color": "hsl(231, 48%, 48%)", "label": "Indigo"},
     {"color": "hsl(207, 90%, 54%)", "label": "Blue"},
 ]
+
+RECAPTCHA_PUBLIC_KEY = env("DJANGO_RECAPTCHA_PUBLIC_KEY")
+RECAPTCHA_PRIVATE_KEY = env("DJANGO_RECAPTCHA_PRIVATE_KEY")
+SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
+
 
 CKEDITOR_5_CONFIGS = {
     "default": {
