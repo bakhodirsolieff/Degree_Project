@@ -76,12 +76,18 @@
                                 <li>
                                     <a href="{% url 'store:cart' %}"><i class="fas fa-shopping-cart text-white"></i><span class="dn-counter total_cart_items">{{total_cart_items}}</span> </a>
                                 </li>
-                                <li>
-                                    <a href="/auth/sign-in.html" class="btn bg-primary py-2 px-4 rounded text-white">Sign In <i class="fas fa-sign-in-alt ms-1"></i></a>
-                                </li>
-                                <li>
-                                    <a href="/auth/sign-up.html" class="btn bg-primary py-2 px-4 rounded text-white">Sign Up <i class="fas fa-user-plus ms-1"></i></a>
-                                </li>
+                                {% if request.user.is_authenticated %}
+                                    <li>
+                                        <a href={% url "userauths:sign-out" %} class="btn bg-primary py-2 px-4 rounded text-white"><i class="fas fa-sign-in-alt me-1"></i>Sign Out</a>
+                                    </li>
+                                {% else %}
+                                    <li>
+                                        <a href="{% url 'userauths:sign-in' %}" class="btn bg-primary py-2 px-4 rounded text-white">Sign In <i class="fas fa-sign-in-alt ms-1"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'userauths:sign-up' %}" class="btn bg-primary py-2 px-4 rounded text-white">Sign Up <i class="fas fa-user-plus ms-1"></i></a>
+                                    </li>
+                                {% endif %}
                             </ul>
                         </div>
                     </nav>

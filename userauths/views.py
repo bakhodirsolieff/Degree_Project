@@ -46,7 +46,7 @@ def register_view(request):
         'form':form
     }
     return render(request, 'userauths/sign-up.html', context)
-'''
+
 def login_view(request):
     if request.user.is_authenticated:
         messages.warning(request, "You are already logged in")
@@ -113,4 +113,4 @@ def handler500(request, *args, **kwargs):
     context = {}
     response = render(request, 'userauths/500.html', context)
     response.status_code = 500
-    return response'''
+    return response 
