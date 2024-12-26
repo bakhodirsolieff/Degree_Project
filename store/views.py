@@ -7,6 +7,7 @@ from customer import models as customer_models
 from django.contrib import messages 
 from plugin.tax_calculation import tax_calculation
 from plugin.service_fee import calculate_service_fee
+from django.core.mail import EmailMultiAlternatives, send_mail
 
 # Create your views here.
 def index(request):
