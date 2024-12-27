@@ -1,5 +1,4 @@
-{% extends 'partials/base.html' %} {% load static %} {% load humanize %}
-{% block content %}
+{% extends 'partials/base.html' %} {% load static %} {% load humanize %} {% block content %}
 <head>
     <meta charset="utf-8" />
 
@@ -17,8 +16,8 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item"><a href="/../customer/dashboard.html">Customer</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                        <li class="breadcrumb-item"><a href="#">Customer</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Order #334564</li>
                     </ol>
                 </nav>
             </div>
@@ -30,68 +29,17 @@
     <div class="container">
         <div class="row align-items-start justify-content-between">
             {% include "customer/sidebar.html" %}
+
             <div class="col-12 col-md-12 col-lg-8 col-xl-8">
-                <!-- Single Order List -->
                 <div class="row mb-4">
-                    <h4 class="mb-0 mb-4 fw-bold">Dashboard</h4>
-
-                    <div class="col-sm-6 col-lg-4 mb-3 mb-lg-0">
-                        <div class="d-flex justify-content-center align-items-center p-4 shadow-sm rounded">
-                            <span class="display-6 text-danger">
-                                <i class="fas fa-shopping-cart text-danger"></i>
-                            </span>
-                            <div class="ms-4">
-                                <div class="d-flex">
-                                    <h5 class="mb-0 fw-bold">{{orders.count}}</h5>
-                                </div>
-                                <p class="mb-0 h6 fw-semibold">Orders</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6 col-lg-4 mb-3 mb-lg-0">
-                        <div class="d-flex justify-content-center align-items-center p-4 shadow-sm rounded">
-                            <span class="display-6 text-danger">
-                                <i class="fas fa-wallet text-warning"></i>
-                            </span>
-                            <div class="ms-4">
-                                <div class="d-flex">
-                                    <h5 class="mb-0 fw-bold">${{total_spent|floatformat:2}}</h5>
-                                </div>
-                                <p class="mb-0 h6 fw-semibold">Total Spent</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6 col-lg-4 mb-3 mb-lg-0">
-                        <div class="d-flex justify-content-center align-items-center p-4 shadow-sm rounded">
-                            <span class="display-6 text-danger">
-                                <i class="fas fa-bell text-primary"></i>
-                            </span>
-                            <div class="ms-4">
-                                <div class="d-flex">
-                                    <h5 class="mb-0 fw-bold">{{notis_count}}</h5>
-                                </div>
-                                <p class="mb-0 h6 fw-semibold">Notifications</p>
-                            </div>
-                        </div>
-                    </div>
+                    <h4 class="mb-0 mb-2 fw-bold">Order Number: #{{order.order_id}}</h4>
                 </div>
 
-                <div class="ord_list_wrap border mb-4 mfliud">
-                    {% for order in orders %}
-                        <div class="ord_list_head gray d-flex align-items-center justify-content-between px-3 py-3 mb-4">
-                            <div class="olh_flex">
-                                <p class="m-0 p-0"><span class="text-muted">Order Number</span></p>
-                                <h6 class="mb-0 ft-medium">#{{order.order_id}}</h6>
-                            </div>
-                            <div class="olh_flex">
-                                <a href="{% url "customer:order_detail" order.order_id %}" class="btn btn-sm bg-primary rounded text-white">View Order</a>
-                            </div>
-                        </div>
+                <div class="order-data">
+                    <div class="ord_list_wrap border mb-4 mfliud">
                         <div class="ord_list_body text-left">
                             <!-- Single Item -->
-                            {% for item in order.order_items.all %}
+                            {% for item in order.order_items.all  %}
                                 <div class="row align-items-center justify-content-center m-0 py-4 br-bottom">
                                     <div class="col-xl-6 col-lg-5 col-md-5 col-12">
                                         <div class="cart_single d-flex align-items-start mfliud-bot gap-3">
@@ -121,9 +69,8 @@
                                         <p class="mb-1 p-0"><span class="text-muted">Payment Status</span></p>
                                         <h6 class="mb-0 ft-medium fs-sm">{{order.payment_status}}</h6>
                                     </div>
-                                    <div class="col-xl-2 col-lg-4 col-md-4 col-6">
-                                        <p class="mb-1 p-0"><span class="text-muted">Order Date</span></p>
-                                        <h6 class="mb-0 ft-medium fs-sm">{{order.date}}</h6>
+                                    <div class="col-xl-2 col-lg-3 col-md-3 col-6">
+                                        <a href="{% url 'customer:order_item_detail' order.order_id item.item_id %}" class="btn bg-primary btn-sm text-white rounded"><i class="fas fa-eye"></i></a>
                                     </div>
                                 </div>
                             {% endfor %}
@@ -133,14 +80,44 @@
                                 <div class="olf_flex_inner hide_mob">
                                     <p class="m-0 p-0"><span class="text-muted medium">Paid using {{order.payment_method}}</span></p>
                                 </div>
-                                <div class="float-end"><h5 class="mb-0 fs-sm ft-bold">Total: ${{order.total}}</h5></div>
                             </div>
                         </div>
-                    {% endfor %}
-                     
+                    </div>
+
+                    <h4 class="mt-5 mb-2 fw-bold">Order Summary</h4>
+                    <div class="">
+                        <h5 class="mb-2 fs-sm"><span class="fw-bold">Date:</span> {{order.date}}</h5>
+                        <h5 class="mb-2 fs-sm"><span class="fw-bold">Sub-total:</span> ${{order.sub_total|intcomma}}</h5>
+                        <h5 class="mb-2 fs-sm"><span class="fw-bold">Shipping:</span> ${{order.shipping|intcomma}}</h5>
+                        <h5 class="mb-2 fs-sm"><span class="fw-bold">Tax:</span> ${{order.tax}}</h5>
+                        
+                        {% if order.saved %}
+                        <h5 class="mb-2 fs-sm"><span class="fw-bold">Discount:</span> -${{order.saved|intcomma}}</h5>
+                        {% endif %}
+                        
+                        <h5 class="mb-2 fs-sm"><span class="fw-bold">Total:</span> ${{order.total|intcomma}}</h5>
+                    </div>
+
+                    <h4 class="mt-5 mb-2 fw-bold">Bio Data</h4>
+                    <div class="">
+                        <h5 class="mb-2 fs-sm"><span class="fw-bold">Full Name:</span> {{order.address.full_name}}</h5>
+                        <h5 class="mb-2 fs-sm"><span class="fw-bold">Email:</span> {{order.address.email}}</h5>
+                        <h5 class="mb-2 fs-sm"><span class="fw-bold">Mobile:</span> {{order.address.mobile}}</h5>
+                    </div>
+
+                    <h4 class="mt-5 mb-2 fw-bold">Shipping Details</h4>
+                    <div class="">
+                        <h5 class="mb-2 fs-sm"><span class="fw-bold">Address:</span> {{order.address.address}}</h5>
+                        <h5 class="mb-2 fs-sm"><span class="fw-bold">City:</span> {{order.address.city}}</h5>
+                        <h5 class="mb-2 fs-sm"><span class="fw-bold">State:</span> {{order.address.state}}</h5>
+                        <h5 class="mb-2 fs-sm"><span class="fw-bold">Country:</span> {{order.address.country}}</h5>
+                        <h5 class="mb-2 fs-sm"><span class="fw-bold">Zip:</span> {{order.address.zip_code}}</h5>
+                    </div>
                 </div>
+                <a href="" class="btn bg-primary rounded btn-sm text-white mt-5">Contact Support <i class="fas fa-phone ms-2"></i></a>
             </div>
         </div>
     </div>
 </section>
+
 {% endblock content %}

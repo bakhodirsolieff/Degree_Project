@@ -24,7 +24,7 @@ def dashboard(request):
     }
 
     return render(request, "customer/dashboard.html", context)
-'''
+ 
 @login_required
 def orders(request):
     orders = store_models.Order.objects.filter(customer=request.user)
@@ -56,9 +56,7 @@ def order_item_detail(request, order_id, item_id):
     }
 
     return render(request, "customer/order_item_detail.html", context)
-
-
-
+'''
 @login_required
 def wishlist(request):
     wishlist_list = customer_models.Wishlist.objects.filter(user=request.user)
