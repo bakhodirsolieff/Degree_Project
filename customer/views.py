@@ -104,3 +104,80 @@ def mark_noti_seen(request, id):
 
     messages.success(request, "Notification marked as seen")
     return redirect("customer:notis")
+
+@login_required
+def addresses(request):
+    addresses = customer_models.Address.objects.filter(user=request.user)
+    context = {
+        "addresses": addresses,
+    }
+
+    return render(request, "customer/addresses.html", context)
+
+@login_required
+def address_detail(request, id):
+    address = customer_models.Address.objects.get(user=request.user, id=id)
+    
+    if request.method == "POST":
+        full_name = request.POST.get("full_name")
+        mobile = request.POST.get("mobile")
+        email = request.POST.get("email")
+        country = request.POST.get("country")
+        state = request.POST.get("state")
+        city = request.POST.get("city")
+        address_location = request.POST.get("address")
+        zip_code = request.POST.get("zip_code")
+
+        address.full_name = full_name
+        address.mobile = mobile
+        address.email = email
+        address.country = country
+        address.state = state
+        address.city = city
+        address.address = address_location
+        address.zip_code = zip_code
+        address.save()
+
+        messages.success(request, "Address updated")
+        return redirect("customer:address_detail", address.id)
+    
+    context = {
+        "address": address,
+    }
+
+    return render(request, "customer/address_detail.html", context)
+
+@login_required
+def address_create(request):
+    if request.method == "POST":
+        full_name = request.POST.get("full_name")
+        mobile = request.POST.get("mobile")
+        email = request.POST.get("email")
+        country = request.POST.get("country")
+        state = request.POST.get("state")
+        city = request.POST.get("city")
+        address = request.POST.get("address")
+        zip_code = request.POST.get("zip_code")
+
+        customer_models.Address.objects.create(
+            user=request.user,
+            full_name=full_name,
+            mobile=mobile,
+            email=email,
+            country=country,
+            state=state,
+            city=city,
+            address=address,
+            zip_code=zip_code,
+        )
+
+        messages.success(request, "Address created")
+        return redirect("customer:addresses")
+    
+    return render(request, "customer/address_create.html")
+
+def delete_address(request, id):
+    address = customer_models.Address.objects.get(user=request.user, id=id)
+    address.delete()
+    messages.success(request, "Address deleted")
+    return redirect("customer:addresses")
