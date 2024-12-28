@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 USER_TYPE = (
     ("Vendor", "Vendor"),
     ("Customer", "Customer"),
@@ -35,4 +38,12 @@ class Profile(models.Model):
         if not self.full_name:
             self.full_name = self.user.username
         super(Profile, self).save(*args, **kwargs)
-    
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()

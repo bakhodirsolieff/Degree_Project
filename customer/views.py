@@ -185,26 +185,48 @@ def delete_address(request, id):
 
 @login_required
 def profile(request):
-    profile = request.user.profile
+    try:
+        profile = request.user.profile
+    except Profile.DoesNotExist:
+        profile = Profile.objects.create(user=request.user)
 
     if request.method == "POST":
         image = request.FILES.get("image")
         full_name = request.POST.get("full_name")
         mobile = request.POST.get("mobile")
-    
-        if image != None:
-            profile.image = image
 
+        if image:
+            profile.image = image
         profile.full_name = full_name
         profile.mobile = mobile
 
-        request.user.save()
         profile.save()
-
         messages.success(request, "Profile Updated Successfully")
         return redirect("customer:profile")
-    
+
     context = {
-        'profile':profile,
+        "profile": profile,
     }
     return render(request, "customer/profile.html", context)
+
+@login_required
+def change_password(request):
+    if request.method == "POST":
+        old_password = request.POST.get("old_password")
+        new_password = request.POST.get("new_password")
+        confirm_new_password = request.POST.get("confirm_new_password")
+
+        if confirm_new_password != new_password:
+            messages.error(request, "Confirm Password and New Password Does Not Match")
+            return redirect("customer:change_password")
+        
+        if check_password(old_password, request.user.password):
+            request.user.set_password(new_password)
+            request.user.save()
+            messages.success(request, "Password Changed Successfully")
+            return redirect("customer:profile")
+        else:
+            messages.error(request, "Old password is not correct")
+            return redirect("customer:change_password")
+    
+    return render(request, "customer/change_password.html")

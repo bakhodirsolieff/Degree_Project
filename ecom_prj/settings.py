@@ -158,6 +158,10 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
+LOGOUT_REDIRECT_URL="userauths:sign-in"
+LOGIN_URL="userauths:sign-in"
+
+
 customColorPalette = [
     {"color": "hsl(4, 90%, 58%)", "label": "Red"},
     {"color": "hsl(340, 82%, 52%)", "label": "Pink"},
