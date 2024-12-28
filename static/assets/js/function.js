@@ -172,4 +172,35 @@ $(document).ready(function () {
             },
         });
     });
+
+    $(document).on("click", ".add_to_wishlist", function () {
+        const button = $(this);
+        const product_id = button.attr("data-product_id");
+        console.log(product_id);
+
+        $.ajax({
+            url: `/customer/add_to_wishlist/${product_id}/`,
+            beforeSend: function () {
+                button.html("<i class='fas fa-spinner fa-spin text-gray'></i>");
+            },
+            success: function (response) {
+                button.html("<i class='fas fa-heart text-danger'></i>");
+                console.log(response);
+                if (response.message === "User is not logged in") {
+                    button.html("<i class='fas fa-heart text-gray'></i>");
+
+                    Toast.fire({
+                        icon: "warning",
+                        title: response.message,
+                    });
+                } else {
+                    button.html("<i class='fas fa-heart text-danger'></i>");
+                    Toast.fire({
+                        icon: "success",
+                        title: response.message,
+                    });
+                }
+            },
+        });
+    });
 });
