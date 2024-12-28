@@ -86,3 +86,21 @@ def add_to_wishlist(request, id):
         return JsonResponse({"message": "Item added to wishlist", "wishlist_count": wishlist.count()})
     else:
         return JsonResponse({"message": "User is not logged in", "wishlist_count": "0"})
+    
+@login_required
+def notis(request):
+    notis_list = customer_models.Notifications.objects.filter(user=request.user, seen=False)
+     
+    context = {
+        "notis": notis 
+    }
+    return render(request, "customer/notis.html", context)
+
+@login_required
+def mark_noti_seen(request, id):
+    noti = customer_models.Notifications.objects.get(user=request.user, id=id)
+    noti.seen = True
+    noti.save()
+
+    messages.success(request, "Notification marked as seen")
+    return redirect("customer:notis")
