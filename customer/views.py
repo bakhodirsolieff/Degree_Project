@@ -7,7 +7,7 @@ from django.db import models
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 
-#from plugin.paginate_queryset import paginate_queryset
+from plugin.paginate_queryset import paginate_queryset 
 from store import models as store_models
 from customer import models as customer_models
 from userauths.models import Profile
@@ -28,9 +28,10 @@ def dashboard(request):
  
 @login_required
 def orders(request):
-    orders = store_models.Order.objects.filter(customer=request.user)
-
+    orders_list = store_models.Order.objects.filter(customer=request.user)
+    orders = paginate_queryset(request, orders_list, 3)
     context = {
+        "orders_list":orders_list,
         "orders": orders,
     }
 
@@ -61,8 +62,9 @@ def order_item_detail(request, order_id, item_id):
 @login_required
 def wishlist(request):
     wishlist_list = customer_models.Wishlist.objects.filter(user=request.user)
-    
+    wishlist = paginate_queryset(request, wishlist_list, 1)
     context = {
+        "wishlist": wishlist,
         "wishlist_list": wishlist_list,
     }
 
