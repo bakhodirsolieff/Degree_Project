@@ -10,6 +10,7 @@ from django.contrib.auth.hashers import check_password
 #from plugin.paginate_queryset import paginate_queryset
 from store import models as store_models
 from customer import models as customer_models
+from userauths.models import Profile
 
 @login_required
 def dashboard(request):
@@ -181,3 +182,29 @@ def delete_address(request, id):
     address.delete()
     messages.success(request, "Address deleted")
     return redirect("customer:addresses")
+
+@login_required
+def profile(request):
+    profile = request.user.profile
+
+    if request.method == "POST":
+        image = request.FILES.get("image")
+        full_name = request.POST.get("full_name")
+        mobile = request.POST.get("mobile")
+    
+        if image != None:
+            profile.image = image
+
+        profile.full_name = full_name
+        profile.mobile = mobile
+
+        request.user.save()
+        profile.save()
+
+        messages.success(request, "Profile Updated Successfully")
+        return redirect("customer:profile")
+    
+    context = {
+        'profile':profile,
+    }
+    return render(request, "customer/profile.html", context)
