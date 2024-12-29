@@ -61,3 +61,70 @@ def products(request):
         "products_list": products_list,
     }
     return render(request, "vendor/products.html", context)
+
+@login_required
+def orders(request):
+    orders_list = store_models.Order.objects.filter(vendors=request.user, payment_status="Paid")
+    
+    orders = paginate_queryset(request, orders_list, 10)
+
+    context = {
+        "orders": orders,
+        "orders_list": orders_list,
+    }
+
+    return render(request, "vendor/orders.html", context)
+
+@login_required
+def order_detail(request, order_id):
+    order = store_models.Order.objects.get(vendors=request.user, order_id=order_id, payment_status="Paid")
+
+    context = {
+        "order": order,
+    }
+
+    return render(request, "vendor/order_detail.html", context)
+
+@login_required
+def order_item_detail(request, order_id, item_id):
+    order = store_models.Order.objects.get(vendors=request.user, order_id=order_id, payment_status="Paid")
+    item = store_models.OrderItem.objects.get(item_id=item_id, order=order)
+    context = {
+        "order": order,
+        "item": item,
+    }
+    return render(request, "vendor/order_item_detail.html", context)
+
+@login_required
+def update_order_status(request, order_id):
+    order = store_models.Order.objects.get(vendors=request.user, order_id=order_id, payment_status="Paid")
+    
+    if request.method == "POST":
+        order_status = request.POST.get("order_status")
+        order.order_status = order_status
+        order.save()
+
+        messages.success(request, "Order status updated")
+        return redirect("vendor:order_detail", order.order_id)
+
+    return redirect("vendor:order_detail", order.order_id)
+
+@login_required
+def update_order_item_status(request, order_id, item_id):
+    order = store_models.Order.objects.get(vendors=request.user, order_id=order_id, payment_status="Paid")
+    item = store_models.OrderItem.objects.get(item_id=item_id, order=order)
+    
+    if request.method == "POST":
+        
+        order_status = request.POST.get("order_status")
+        shipping_service = request.POST.get("shipping_service")
+        tracking_id = request.POST.get("tracking_id")
+        
+        item.order_status = order_status
+        item.shipping_service = shipping_service
+        item.tracking_id = tracking_id
+        item.save()
+
+        messages.success(request, "Item status updated")
+        return redirect("vendor:order_item_detail", order.order_id, item.item_id)
+    return redirect("vendor:order_item_detail", order.order_id, item.item_id)
