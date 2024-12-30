@@ -64,13 +64,13 @@ def products(request):
 
 @login_required
 def orders(request):
-    orders_list = store_models.Order.objects.filter(vendors=request.user, payment_status="Paid")
+    orders = store_models.Order.objects.filter(vendors=request.user, payment_status="Paid")
     
-    orders = paginate_queryset(request, orders_list, 10)
+    #orders = paginate_queryset(request, orders_list, 10)
 
     context = {
         "orders": orders,
-        "orders_list": orders_list,
+        #"orders_list": orders_list,
     }
 
     return render(request, "vendor/orders.html", context)
@@ -128,3 +128,45 @@ def update_order_item_status(request, order_id, item_id):
         messages.success(request, "Item status updated")
         return redirect("vendor:order_item_detail", order.order_id, item.item_id)
     return redirect("vendor:order_item_detail", order.order_id, item.item_id)
+
+@login_required
+def coupons(request):
+    coupons_list = store_models.Coupon.objects.filter(vendor=request.user)
+    coupons = paginate_queryset(request, coupons_list, 10)
+
+    context = {
+        "coupons": coupons,
+        "coupons_list": coupons_list,
+    }
+    return render(request, "vendor/coupons.html", context)
+
+@login_required
+def update_coupon(request, id):
+    coupon = store_models.Coupon.objects.get(vendor=request.user, id=id)
+    
+    if request.method == "POST":
+        code = request.POST.get("coupon_code")
+        coupon.code = code
+        coupon.save()
+
+    messages.success(request, "Coupon updated")
+    return redirect("vendor:coupons")
+
+
+@login_required
+def delete_coupon(request, id):
+    coupon = store_models.Coupon.objects.get(vendor=request.user, id=id)
+    coupon.delete()
+    messages.success(request, "Coupon deleted")
+    return redirect("vendor:coupons")
+
+
+@login_required
+def create_coupon(request):
+    if request.method == "POST":
+        code = request.POST.get("coupon_code")
+        discount = request.POST.get("coupon_discount")
+        store_models.Coupon.objects.create(vendor=request.user, code=code, discount=discount)
+
+    messages.success(request, "Coupon created")
+    return redirect("vendor:coupons")

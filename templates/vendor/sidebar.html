@@ -10,12 +10,12 @@
                 </li>
                 <li>
                     <a href="placeholder"><i class="fas fa-plus-circle me-2"></i>Create Product</a>
-                </li>
+                </li> 
                 <li>
                     <a href="{% url 'vendor:orders' %}" class="{% if '/vendor/orders/' in request.path or '/vendor/order_detail/' in request.path %} active {% endif %}"><i class="fas fa-shopping-cart me-2"></i>Orders</a>
                 </li>
                 <li>
-                    <a href="placeholder" class="{% if '/vendor/coupons/' in request.path %} active {% endif %}"><i class="fas fa-tag me-2"></i>Coupons</a>
+                    <a href="{% url 'vendor:coupons' %}" class="{% if '/vendor/coupons/' in request.path %} active {% endif %}"><i class="fas fa-tag me-2"></i>Coupons</a>
                 </li>
                 <li>
                     <a href="placeholder" class="{% if '/vendor/reviews/' in request.path %} active {% endif %}"><i class="fas fa-star me-2"></i>Reviews</a>
