@@ -209,3 +209,71 @@ def update_reply(request, id):
 
     messages.success(request, "Reply added")
     return redirect("vendor:reviews")
+
+@login_required
+def notis(request):
+    notis_list = vendor_models.Notifications.objects.filter(user=request.user, seen=False)
+    notis = paginate_queryset(request, notis_list, 10)
+
+    context = {
+        "notis": notis,
+        "notis_list": notis_list,
+    }
+    return render(request, "vendor/notis.html", context)
+
+@login_required
+def mark_noti_seen(request, id):
+    noti = vendor_models.Notifications.objects.get(user=request.user, id=id)
+    noti.seen = True
+    noti.save()
+
+    messages.success(request, "Notification marked as seen")
+    return redirect("vendor:notis")
+
+@login_required
+def profile(request):
+    profile = request.user.profile
+
+    if request.method == "POST":
+        image = request.FILES.get("image")
+        full_name = request.POST.get("full_name")
+        mobile = request.POST.get("mobile")
+    
+        if image != None:
+            profile.image = image
+
+        profile.full_name = full_name
+        profile.mobile = mobile
+
+        request.user.save()
+        profile.save()
+
+        messages.success(request, "Profile Updated Successfully")
+        return redirect("vendor:profile")
+    
+    context = {
+        'profile':profile,
+    }
+    return render(request, "vendor/profile.html", context)
+
+@login_required
+def change_password(request):
+    if request.method == "POST":
+        old_password = request.POST.get("old_password")
+        new_password = request.POST.get("new_password")
+        confirm_new_password = request.POST.get("confirm_new_password")
+
+        if confirm_new_password != new_password:
+            messages.error(request, "Confirm Password and New Password Does Not Match")
+            return redirect("vendor:change_password")
+        
+        if check_password(old_password, request.user.password):
+            request.user.set_password(new_password)
+            request.user.save()
+            messages.success(request, "Password Changed Successfully")
+            return redirect("vendor:profile")
+        else:
+            messages.error(request, "Old password is not correct")
+            return redirect("vendor:change_password")
+    
+    return render(request, "vendor/change_password.html")

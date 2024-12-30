@@ -17,4 +17,8 @@ urlpatterns = [
     path("create_coupon/", views.create_coupon, name="create_coupon"),
     path("reviews/", views.reviews, name="reviews"),
     path("update_reply/<id>/", views.update_reply, name="update_reply"),
+    path("notis/", views.notis, name="notis"),
+    path("mark_noti_seen/<id>/", views.mark_noti_seen, name="mark_noti_seen"),
+    path("profile/", views.profile, name="profile"),
+    path("change_password/", views.change_password, name="change_password"),
 ]
