@@ -4,7 +4,7 @@
         <div class="row align-items-start justify-content-between">
             {% include 'vendor/sidebar.html' %}
             <div class="col-12 col-md-12 col-lg-9 col-xl-10">
-                <h4 class="mb-0 mb-4 fw-bold">Orders ({{orders.count}})</h4>
+                <h4 class="mb-0 mb-4 fw-bold">Orders ({{orders_list.count}})</h4>
 
                 {% for order in orders %}
                     <div class="ord_list_wrap border mb-4 mfliud">

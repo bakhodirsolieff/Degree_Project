@@ -64,13 +64,13 @@ def products(request):
 
 @login_required
 def orders(request):
-    orders = store_models.Order.objects.filter(vendors=request.user, payment_status="Paid")
+    orders_list = store_models.Order.objects.filter(vendors=request.user, payment_status="Paid")
     
-    #orders = paginate_queryset(request, orders_list, 10)
+    orders = paginate_queryset(request, orders_list, 10)
 
     context = {
         "orders": orders,
-        #"orders_list": orders_list,
+        "orders_list": orders_list,
     }
 
     return render(request, "vendor/orders.html", context)
@@ -170,3 +170,42 @@ def create_coupon(request):
 
     messages.success(request, "Coupon created")
     return redirect("vendor:coupons")
+
+@login_required
+def reviews(request):
+    reviews_list = store_models.Review.objects.filter(product__vendor=request.user)
+
+    rating = request.GET.get("rating")
+    date = request.GET.get("date")
+
+    print("rating ==========", rating)
+    print("date ==========", date)
+
+    # Apply filtering and ordering to reviews_list
+    if rating:
+        reviews_list = reviews_list.filter(rating=rating)  # Apply filter to the reviews_list
+
+    if date:
+        reviews_list = reviews_list.order_by(date)  # Ensure this refers to a valid model field
+
+    # Paginate after filtering and ordering
+    reviews = paginate_queryset(request, reviews_list, 10)
+
+    context = {
+        "reviews": reviews,
+        "reviews_list": reviews_list,
+    }
+    return render(request, "vendor/reviews.html", context)
+
+
+@login_required
+def update_reply(request, id):
+    review = store_models.Review.objects.get(id=id)
+    
+    if request.method == "POST":
+        reply = request.POST.get("reply")
+        review.reply = reply
+        review.save()
+
+    messages.success(request, "Reply added")
+    return redirect("vendor:reviews")

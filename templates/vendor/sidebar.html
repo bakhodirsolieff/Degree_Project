@@ -18,7 +18,7 @@
                     <a href="{% url 'vendor:coupons' %}" class="{% if '/vendor/coupons/' in request.path %} active {% endif %}"><i class="fas fa-tag me-2"></i>Coupons</a>
                 </li>
                 <li>
-                    <a href="placeholder" class="{% if '/vendor/reviews/' in request.path %} active {% endif %}"><i class="fas fa-star me-2"></i>Reviews</a>
+                    <a href="{% url 'vendor:reviews' %}" class="{% if '/vendor/reviews/' in request.path %} active {% endif %}"><i class="fas fa-star me-2"></i>Reviews</a>
                 </li>
                 <li>
                     <a href="placeholder" class="{% if '/vendor/notis/' in request.path %} active {% endif %}"><i class="fas fa-bell me-2"></i>Notifications</a>
