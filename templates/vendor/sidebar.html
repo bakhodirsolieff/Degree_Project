@@ -9,10 +9,7 @@
                     <a href="{% url 'vendor:products' %}"  class="{% if '/vendor/products/' in request.path %} active {% endif %}"><i class="bi bi-grid-1x2-fill me-2"></i>Products</a>
                 </li>
                 <li>
-                    <a href="placeholder"><i class="fas fa-plus-circle me-2"></i>Create Product</a>
-                </li> 
-                <li>
-                    <a href="{% url 'vendor:orders' %}" class="{% if '/vendor/orders/' in request.path or '/vendor/order_detail/' in request.path %} active {% endif %}"><i class="fas fa-shopping-cart me-2"></i>Orders</a>
+                    <a href="{% url 'vendor:create_product' %}"><i class="fas fa-plus-circle me-2"></i>Create Product</a>
                 </li>
                 <li>
                     <a href="{% url 'vendor:coupons' %}" class="{% if '/vendor/coupons/' in request.path %} active {% endif %}"><i class="fas fa-tag me-2"></i>Coupons</a>

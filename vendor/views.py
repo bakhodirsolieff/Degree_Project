@@ -277,3 +277,159 @@ def change_password(request):
             return redirect("vendor:change_password")
     
     return render(request, "vendor/change_password.html")
+
+@login_required
+def create_product(request):
+    categories = store_models.Category.objects.all()
+
+    if request.method == "POST":
+        image = request.FILES.get("image")
+        name = request.POST.get("name")
+        category_id = request.POST.get("category_id")
+        description = request.POST.get("description")
+        price = request.POST.get("price")
+        regular_price = request.POST.get("regular_price")
+        shipping = request.POST.get("shipping")
+        stock = request.POST.get("stock")
+
+        product = store_models.Product.objects.create(
+            vendor=request.user,
+            image=image,
+            name=name,
+            category_id=category_id,
+            description=description,
+            price=price,
+            regular_price=regular_price,
+            shipping=shipping,
+            stock=stock,
+        )
+
+        return redirect("vendor:update_product", product.id)
+    context = {
+        'categories': categories
+    }
+    return render(request, "vendor/create_product.html", context)
+
+@login_required
+def update_product(request, id):
+    # Retrieve the product by its ID and ensure it belongs to the current vendor
+    product = get_object_or_404(store_models.Product, id=id, vendor=request.user)
+
+    # Fetch all categories (for category selection in the form)
+    categories = store_models.Category.objects.all()
+
+    if request.method == "POST":
+        # Get data from the form submission
+        image = request.FILES.get("image")
+        name = request.POST.get("name")
+        category_id = request.POST.get("category_id")
+        description = request.POST.get("description")
+        price = request.POST.get("price")
+        regular_price = request.POST.get("regular_price")
+        shipping = request.POST.get("shipping")
+        stock = request.POST.get("stock")
+
+        # Update the product details
+        product.name = name
+        product.category_id = category_id
+        product.description = description
+        product.price = price
+        product.regular_price = regular_price
+        product.shipping = shipping
+        product.stock = stock
+
+        if image:  # Update image only if a new one is uploaded
+            product.image = image
+
+        product.save()
+
+
+        # Handle product variants and items
+        variant_ids = request.POST.getlist('variant_id[]')
+        variant_titles = request.POST.getlist('variant_title[]')
+
+        if variant_ids and variant_titles:
+
+            # Loop through variants
+            for i, variant_id in enumerate(variant_ids):
+                variant_name = variant_titles[i]
+                
+                if variant_id:  # If variant exists, update it
+                    variant = store_models.Variant.objects.filter(id=variant_id).first()
+                    if variant:
+                        variant.name = variant_name
+                        variant.save()
+                else:  # Create new variant
+                    variant = store_models.Variant.objects.create(product=product, name=variant_name)
+                
+                # Now handle items for this variant
+                item_ids = request.POST.getlist(f'item_id_{i}[]')
+                item_titles = request.POST.getlist(f'item_title_{i}[]')
+                item_descriptions = request.POST.getlist(f'item_description_{i}[]')
+
+                if item_ids and item_titles and item_descriptions:
+
+                    for j in range(len(item_titles)):
+                        item_id = item_ids[j]
+                        item_title = item_titles[j]
+                        item_description = item_descriptions[j]
+                        
+                        if item_id:  # Update existing item
+                            variant_item = store_models.VariantItem.objects.filter(id=item_id).first()
+                            if variant_item:
+                                variant_item.title = item_title
+                                variant_item.content = item_description
+                                variant_item.save()
+                        else:  # Create new item
+                            store_models.VariantItem.objects.create(
+                                variant=variant,
+                                title=item_title,
+                                content=item_description
+                            )
+        # Handle product gallery images
+        # Get all dynamically added image inputs
+        for file_key, image_file in request.FILES.items():
+            if file_key.startswith('image_'):  # Identify the dynamically added image inputs
+                store_models.Gallery.objects.create(product=product, image=image_file)
+
+
+        # Redirect back to the update page after saving
+        return redirect("vendor:update_product", product.id)
+
+    # Prepare context for the template
+    context = {
+        'product': product,
+        'categories': categories,
+        'variants': store_models.Variant.objects.filter(product=product),
+        'gallery_images': store_models.Gallery.objects.filter(product=product),  # Pass existing gallery images to the template
+    }
+
+    return render(request, "vendor/update_product.html", context)
+
+def delete_variants(request, product_id, variant_id):
+    product = store_models.Product.objects.get(id=product_id)
+    variants = store_models.Variant.objects.get(product__vendor=request.user, product=product, id=variant_id)
+    variants.delete()
+    return JsonResponse({"message": "Variants deleted"})
+
+
+def delete_variants_items(request, variant_id, item_id):
+    variant = store_models.Variant.objects.get(id=variant_id)
+    item = store_models.VariantItem.objects.get(variant=variant, id=item_id)
+    item.delete()
+    return JsonResponse({"message": "Variant Item deleted"})
+
+
+def delete_product_image(request, product_id, image_id):
+    product = store_models.Product.objects.get(id=product_id)
+    image = store_models.Gallery.objects.get(product=product, id=image_id)
+    image.delete()
+    return JsonResponse({"message": "Product Image deleted"})
+
+
+def delete_product(request, product_id):
+    product = store_models.Product.objects.get(id=product_id)
+    product.delete()
+
+    messages.success(request, "Product deleted")
+    return redirect("vendor:products")
