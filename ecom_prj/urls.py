@@ -28,7 +28,7 @@ urlpatterns = [
     path('customer/', include('customer.urls')),
     path('vendor/', include('vendor.urls')), 
     path("ckeditor5/", include('django_ckeditor_5.urls')),
-    
+    path('blog/', include("blog.urls")),
     path('password-reset/', auth_views.PasswordResetView.as_view(template_name='userauths/password/password_reset.html'), name='password_reset'),
     path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='userauths/password/password_reset_done.html'), name='password_reset_done'),
     path('password-reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='userauths/password/password_reset_confirmation.html'), name='password_reset_confirm'),
