@@ -21,7 +21,7 @@
                     <a href="{% url 'vendor:notis' %}" class="{% if '/vendor/notis/' in request.path %} active {% endif %}"><i class="fas fa-bell me-2"></i>Notifications</a>
                 </li>
                 <li>
-                    <a href="vendor:profile" class="{% if '/vendor/profile/' in request.path %} active {% endif %}"><i class="fas fa-user me-2"></i>Profile</a>
+                    <a href="{% url 'vendor:profile' %}" class="{% if '/vendor/profile/' in request.path %} active {% endif %}"><i class="fas fa-user me-2"></i>Profile</a>
                 </li>
                 <li>
                     <a href="{% url 'userauths:sign-out' %}"><i class="fas fa-power-off me-2"></i>Logout</a>
