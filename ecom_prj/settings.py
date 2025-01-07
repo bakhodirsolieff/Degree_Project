@@ -134,6 +134,14 @@ USE_I18N = True
 
 USE_TZ = True
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.office365.com'
+EMAIL_PORT = 587   
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False   
+EMAIL_HOST_USER = 'UL0279899@edu.uni.lodz.pl'
+EMAIL_HOST_PASSWORD = 'Aff1212121?!'
+DEFAULT_FROM_EMAIL = 'UL0279899@edu.uni.lodz.pl'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
@@ -160,8 +168,8 @@ MESSAGE_TAGS = {
 
 LOGOUT_REDIRECT_URL="userauths:sign-in"
 LOGIN_URL="userauths:sign-in"
-
-
+LOGIN_REDIRECT_URL = ""
+ 
 customColorPalette = [
     {"color": "hsl(4, 90%, 58%)", "label": "Red"},
     {"color": "hsl(340, 82%, 52%)", "label": "Pink"},

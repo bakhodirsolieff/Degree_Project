@@ -1,5 +1,3 @@
-from django.shortcuts import render
-
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -113,4 +111,4 @@ def handler500(request, *args, **kwargs):
     context = {}
     response = render(request, 'userauths/500.html', context)
     response.status_code = 500
-    return response 
+    return response
