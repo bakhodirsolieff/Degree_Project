@@ -67,6 +67,14 @@ a.link {
     color: #324875;
 }
 
+.add_to_cart {
+    transition: background 0.3s, transform 0.2s;
+}
+.add_to_cart:hover {
+    background: #004aad !important;
+    transform: scale(1.05);
+}
+
 a.link:hover,
 a.link:focus,
 a:hover,
@@ -3980,6 +3988,11 @@ small {
 .product_grid:focus .shop_thumb .ovr-show {
     opacity: 1;
     display: block !important;
+}
+
+.shop_thumb img:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
 }
 
 .blc1 {

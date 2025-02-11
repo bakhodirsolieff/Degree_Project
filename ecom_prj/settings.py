@@ -67,6 +67,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+SESSION_COOKIE_AGE = 1209600  
+
+AUTHENTICATION_BACKENDS = [
+    'userauths.backends.EmailBackend', 
+    'django.contrib.auth.backends.ModelBackend',  
+]
+
+
 ROOT_URLCONF = 'ecom_prj.urls'
 
 TEMPLATES = [
@@ -187,7 +195,26 @@ MESSAGE_TAGS = {
 
 LOGOUT_REDIRECT_URL="userauths:sign-in"
 LOGIN_URL="userauths:sign-in"
-LOGIN_REDIRECT_URL = ""
+LOGIN_REDIRECT_URL='userauths:sign-in'
+ 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+ 
  
 customColorPalette = [
     {"color": "hsl(4, 90%, 58%)", "label": "Red"},

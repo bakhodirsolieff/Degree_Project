@@ -49,11 +49,9 @@
                                  <li>
                                     <a href="javascript:void(0);">Category</a>
                                     <ul class="nav-dropdown nav-submenu">
-                                        
                                         {% for c in category_ %}
                                             <li><a href="{% url 'store:category' c.id %}">{{c.title}}</a></li>
                                         {% endfor %}
-                                            
                                     </ul>
                                 </li>
                                 <li>
@@ -154,8 +152,8 @@
                                 <div class="footer_widget">
                                     <img src="{% static 'assets/img/logo-light.png' %}" class="img-footer small mb-2" alt="" />
 
-                                    <div class="address mt-3">123 Main Street ST <br />United States 324235</div>
-                                    <div class="address mt-3">+123 (456) 7890<br />info@ecommerce.com</div>
+                                    <div class="address mt-3">ulica Jana Matejki 21/23 <br />Poland, Lodz</div>
+                                    <div class="address mt-3">+48 777 77 77<br />info@unilodz.pl</div>
                                     <div class="address mt-3">
                                         <ul class="list-inline">
                                             <li class="list-inline-item">
